@@ -2,6 +2,7 @@ package auth
 
 import (
 	"database/sql"
+	"fmt"
 	"lun-a-backend/internal/db"
 	"lun-a-backend/internal/utils"
 	"net/http"
@@ -59,6 +60,13 @@ func Signup(c *gin.Context) {
 		return
 	}
 
+	// Send welcome email
+	go func() {
+		subject := "Welcome to Lun-A!"
+		body := fmt.Sprintf("Hi %s,\n\nThanks for signing up for Lun-A. We're glad to have you!", req.Email)
+		utils.SendEmail(req.Email, subject, body)
+	}()
+
 	c.JSON(http.StatusCreated, gin.H{"message": "user created successfully"})
 }
 
@@ -115,8 +123,14 @@ func ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	// In a real app, send an email here
-	c.JSON(http.StatusOK, gin.H{"message": "password reset token generated (simulated email)", "token": token})
+	// Send reset email
+	go func() {
+		subject := "Password Reset Request"
+		body := fmt.Sprintf("You requested a password reset. Use the following token to reset your password: %s\n\nThis token expires in 1 hour.", token)
+		utils.SendEmail(req.Email, subject, body)
+	}()
+
+	c.JSON(http.StatusOK, gin.H{"message": "password reset email sent", "token": token})
 }
 
 func ResetPassword(c *gin.Context) {
