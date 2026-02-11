@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 var DB *sqlx.DB
@@ -16,7 +16,7 @@ func InitDB() {
 	if dbPath == "" {
 		dbPath = "auth.db"
 	}
-	DB, err = sqlx.Connect("sqlite3", dbPath)
+	DB, err = sqlx.Connect("sqlite", dbPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
