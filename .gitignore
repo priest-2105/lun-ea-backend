@@ -1,0 +1,12 @@
+# Environment variables
+.env
+
+# Database
+*.db
+
+# Binaries
+*.exe
+lun-a-backend
+
+# Go dependencies
+vendor/
